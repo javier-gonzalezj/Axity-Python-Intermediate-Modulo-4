@@ -1,0 +1,31 @@
+# pre-commit ejecuta los hooks desde la raíz del repositorio git (la carpeta
+# "Modulo 4"), no desde "libreria". Por eso cada comando usa `poetry -C libreria`:
+# Poetry se cambia a esta carpeta para encontrar pyproject.toml y el entorno.
+# Con pass_filenames: false las herramientas revisan todo el proyecto (las rutas
+# que pasaría pre-commit serían relativas a la raíz y no coincidirían).
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff (lint)
+        entry: poetry -C libreria run ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        files: ^libreria/
+        pass_filenames: false
+
+      - id: ruff-format
+        name: ruff (formato)
+        entry: poetry -C libreria run ruff format
+        language: system
+        types_or: [python, pyi]
+        files: ^libreria/
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy (tipos)
+        entry: poetry -C libreria run mypy
+        language: system
+        types: [python]
+        files: ^libreria/
+        pass_filenames: false
